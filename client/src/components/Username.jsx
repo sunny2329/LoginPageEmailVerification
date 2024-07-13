@@ -1,22 +1,31 @@
-import React from 'react'
-import styles from '../styles/Username.module.css'
-import {Link, useNavigate} from 'react-router-dom'
-import {useFormik} from 'formik'
-import {Toaster} from 'react-hot-toast'
-import {usernameValidate} from '../helper/validate'
+import React, { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import avatar from '../assets/profile.png';
+import { Toaster } from 'react-hot-toast';
+import { useFormik } from 'formik';
+import { usernameValidate } from '../helper/validate'
+import { useAuthStore } from '../store/store'
 
+import styles from '../styles/Username.module.css';
 
-function Username() {
+export default function Username() {
+
+    const navigate = useNavigate();
+    const setUsername = useAuthStore(state => state.setUsername);
+
     const formik = useFormik({
-        initialValues:{
-            username:''
+        initialValues: {
+            username: 'example123'
         },
-        validateOnBlur:false,
-        validateOnChange:false,
+        validate: usernameValidate,
+        validateOnBlur: false,
+        validateOnChange: false,
         onSubmit: async values => {
-            console.log(values)
+            setUsername(values.username);
+            navigate('/password')
         }
     })
+
     return (
         <div className="container mx-auto">
 
@@ -34,7 +43,7 @@ function Username() {
 
                     <form className='py-1' onSubmit={formik.handleSubmit}>
                         <div className='profile flex justify-center py-4'>
-                            <img src="" className={styles.profile_img} alt="avatar" />
+                            <img src={avatar} className={styles.profile_img} alt="avatar" />
                         </div>
 
                         <div className="textbox flex flex-col items-center gap-6">
@@ -53,5 +62,3 @@ function Username() {
         </div>
     )
 }
-
-export default Username
